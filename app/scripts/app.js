@@ -5,13 +5,14 @@ angular.module('jsLinkedinConnectorApp', [
   'ngResource',
   'ngSanitize'
 ])
-  .config(['$routeProvider', function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
-  }]);
+  .config(['$routeProvider', function($routeProvider) {
+      $routeProvider
+        .when('/', {
+            templateUrl: 'views/main.html',
+            controller: 'MainCtrl'
+          })
+        .otherwise({
+            redirectTo: '/'
+          });
+    }]);
+

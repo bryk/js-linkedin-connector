@@ -5,8 +5,7 @@ Setting up
 -----------
 
 Typing
-
-    node install
+    npm install
     bower install
 
 should install all dependencies needed for development

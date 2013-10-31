@@ -1,3 +1,6 @@
+# vi
+*.swp
+
 #from yeoman
 node_modules
 dist
