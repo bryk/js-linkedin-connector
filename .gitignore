@@ -1,3 +1,11 @@
+#from yeoman
+node_modules
+dist
+.tmp
+.sass-cache
+app/bower_components
+
+#from initial .gitignore
 lib-cov
 *.seed
 *.log
