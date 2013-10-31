@@ -1,0 +1,12 @@
+<div class="hero-unit">
+  <form ng-submit="doLogin()" name="loginForm">
+    <h2>Please sign in</h2>
+    <input id="loginInput" type="text" class="input-block-level"
+        placeholder="Login" ng-model="login" required>
+    <input id="passwordInput" type="password" class="input-block-level"
+        placeholder="Password" ng-model="password" required>
+    <button data-loading-text="Signing in..." class="btn btn-primary"
+        type="submit" ng-disabled="loginForm.$invalid">Sign in</button>
+  </form>
+</div>
+
