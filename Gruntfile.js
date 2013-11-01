@@ -1,6 +1,14 @@
 // Generated on 2013-10-31 using generator-angular 0.5.1
 'use strict';
 
+var LIVERELOAD_PORT = 35729;
+var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
+var path = require('path');
+var linkedinConnectorMiddleware = require('./server/linkedinConnectorMiddleware');
+var mountFolder = function (connect, dir) {
+  return connect.static(path.resolve(dir));
+};
+
 // # Globbing
 // for performance reasons we're only matching one level down:
 // 'test/spec/{,*/}*.js'
@@ -11,12 +19,14 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
   require('time-grunt')(grunt);
 
-  grunt.initConfig({
-    yeoman: {
-      // configurable paths
+  var yeomanConfig ={
       app: require('./bower.json').appPath || 'app',
-      dist: 'dist'
-    },
+      dist: 'dist',
+      server: 'server'
+    };
+
+  grunt.initConfig({
+    yeoman: yeomanConfig,
     watch: {
       coffee: {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
@@ -32,7 +42,7 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
-          livereload: '<%= connect.options.livereload %>'
+          livereload: LIVERELOAD_PORT
         },
         files: [
           '<%= yeoman.app %>/{,*/}*.html',
@@ -58,30 +68,40 @@ module.exports = function (grunt) {
         port: 9000,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost',
-        livereload: 35729
+        livereload: LIVERELOAD_PORT
       },
       livereload: {
         options: {
           open: true,
-          base: [
-            '.tmp',
-            '<%= yeoman.app %>'
-          ]
+          middleware: function(connect){
+            return [
+              lrSnippet,
+              mountFolder(connect, '.tmp'),
+              mountFolder(connect, yeomanConfig.app)
+            ];
+          }
         }
       },
       test: {
         options: {
           port: 9001,
-          base: [
-            '.tmp',
-            'test',
-            '<%= yeoman.app %>'
-          ]
+          middleware: function(connect){
+            return [
+              lrSnippet,
+              mountFolder(connect, '.tmp'),
+              mountFolder(connect, 'test'),
+              mountFolder(connect, yeomanConfig.app)
+            ];
+          }
         }
       },
       dist: {
         options: {
-          base: '<%= yeoman.dist %>'
+          middleware: function(connect){
+            return [
+              mountFolder(connect, yeomanConfig.dist)
+            ];
+          }
         }
       }
     },
@@ -104,7 +124,8 @@ module.exports = function (grunt) {
       },
       all: [
         'Gruntfile.js',
-        '<%= yeoman.app %>/scripts/{,*/}*.js'
+        '<%= yeoman.app %>/scripts/{,*/}*.js',
+        '<%= yeoman.server %>/{,*/}*.js'
       ]
     },
     coffee: {
@@ -225,7 +246,6 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>',
           src: [
             '*.{ico,png,txt}',
-            '.htaccess',
             'bower_components/**/*',
             'images/{,*/}*.{gif,webp}',
             'styles/fonts/*'
