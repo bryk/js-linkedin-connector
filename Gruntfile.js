@@ -4,7 +4,8 @@
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
 var path = require('path');
-var linkedinConnectorMiddleware = require('./server/linkedinConnectorMiddleware');
+var linkedinConnectorMiddleware = require('./server/linkedinConnectorMiddleware').linkedinConnectorMiddleware;
+var passport = require("passport");
 var mountFolder = function (connect, dir) {
   return connect.static(path.resolve(dir));
 };
@@ -75,9 +76,12 @@ module.exports = function (grunt) {
           open: true,
           middleware: function(connect){
             return [
+              connect.bodyParser(),
+              passport.initialize(),
               lrSnippet,
               mountFolder(connect, '.tmp'),
-              mountFolder(connect, yeomanConfig.app)
+              mountFolder(connect, yeomanConfig.app),
+              linkedinConnectorMiddleware
             ];
           }
         }
@@ -87,10 +91,13 @@ module.exports = function (grunt) {
           port: 9001,
           middleware: function(connect){
             return [
+              connect.bodyParser(),
+              passport.initialize(),
               lrSnippet,
               mountFolder(connect, '.tmp'),
               mountFolder(connect, 'test'),
-              mountFolder(connect, yeomanConfig.app)
+              mountFolder(connect, yeomanConfig.app),
+              linkedinConnectorMiddleware
             ];
           }
         }
@@ -99,7 +106,10 @@ module.exports = function (grunt) {
         options: {
           middleware: function(connect){
             return [
-              mountFolder(connect, yeomanConfig.dist)
+              connect.bodyParser(),
+              passport.initialize(),
+              mountFolder(connect, yeomanConfig.dist),
+              linkedinConnectorMiddleware
             ];
           }
         }
