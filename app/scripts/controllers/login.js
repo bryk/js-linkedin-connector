@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('jsLinkedinConnectorApp')
-  .controller('LoginCtrl', ['$scope', function($scope) {
+  .controller('LoginCtrl', ['$scope', '$location', 'UserService', function($scope, $location, userService) {
       $scope.doLogin = function() {
-        console.log($scope.login, $scope.password);
-        $scope.login = '';
+        // TODO(bryk): Implement this.
         $scope.password = '';
+        userService.rights = ['user'];
+        $location.path('/user');
       };
     }]);
 
