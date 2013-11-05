@@ -77,6 +77,7 @@ module.exports = function (grunt) {
           middleware: function(connect){
             return [
               connect.bodyParser(),
+              connect.query(),
               passport.initialize(),
               lrSnippet,
               mountFolder(connect, '.tmp'),
@@ -92,6 +93,7 @@ module.exports = function (grunt) {
           middleware: function(connect){
             return [
               connect.bodyParser(),
+              connect.query(),
               passport.initialize(),
               lrSnippet,
               mountFolder(connect, '.tmp'),
@@ -107,6 +109,7 @@ module.exports = function (grunt) {
           middleware: function(connect){
             return [
               connect.bodyParser(),
+              connect.query(),
               passport.initialize(),
               mountFolder(connect, yeomanConfig.dist),
               linkedinConnectorMiddleware
