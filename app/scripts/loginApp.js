@@ -1,19 +1,14 @@
 'use strict';
 
-angular.module('jsLinkedinConnectorApp', [
-  'ngCookies',
-  'ngResource',
-  'ngSanitize'
-])
+angular.module('jsLinkedinConnectorLoginApp', [])
   .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
-      .when('/user', {
-        templateUrl: 'app/views/user.html',
-        controller: 'UserCtrl',
-        access: 'user'
+      .when('/', {
+        templateUrl: 'login/views/login.html',
+        controller: 'LoginCtrl'
       })
       .otherwise({
-        redirectTo: '/user'
+        redirectTo: '/'
       });
     $locationProvider.hashPrefix('!');
     $locationProvider.html5Mode(false);
