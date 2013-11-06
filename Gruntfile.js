@@ -6,7 +6,6 @@ var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
 var path = require('path');
 var linkedinConnectorMiddleware = require('./server/linkedinConnectorMiddleware').linkedinConnectorMiddleware;
 var passport = require('passport');
-var underscore = require('underscore');
 
 var mountFolder = function (connect, dir) {
   return connect.static(path.resolve(dir));
