@@ -4,7 +4,8 @@
   "dependencies": {
     "passport": "~0.1.17",
     "passport-linkedin-oauth2": "~1.0.1",
-    "connect": "~2.11.0"
+    "connect": "~2.11.0",
+    "underscore": "~1.5.2"
     },
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -21,7 +22,7 @@
     "grunt-contrib-imagemin": "~0.2.0",
     "grunt-contrib-watch": "~0.5.2",
     "grunt-autoprefixer": "~0.2.0",
-    "grunt-usemin": "~0.1.11",
+    "grunt-usemin": "~2.0.0",
     "grunt-svgmin": "~0.2.0",
     "grunt-rev": "~0.1.0",
     "grunt-concurrent": "~0.3.0",

@@ -6,6 +6,8 @@ var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
 var path = require('path');
 var linkedinConnectorMiddleware = require('./server/linkedinConnectorMiddleware').linkedinConnectorMiddleware;
 var passport = require('passport');
+var underscore = require('underscore');
+
 var mountFolder = function (connect, dir) {
   return connect.static(path.resolve(dir));
 };
@@ -25,12 +27,14 @@ module.exports = function (grunt) {
       dist: 'dist',
       server: 'server'
     };
+  yeomanConfig.appStatic = yeomanConfig.app + path.sep + 'static';
+  yeomanConfig.distStatic = yeomanConfig.dist + path.sep + 'static';
 
   grunt.initConfig({
     yeoman: yeomanConfig,
     watch: {
       styles: {
-        files: ['<%= yeoman.app %>/styles/**/*.css'],
+        files: ['<%= yeoman.appStatic %>/styles/**/*.css'],
         tasks: ['copy:styles', 'autoprefixer']
       },
       livereload: {
@@ -40,8 +44,8 @@ module.exports = function (grunt) {
         files: [
           '<%= yeoman.app %>/**/*.html',
           '.tmp/styles/**/*.css',
-          '{.tmp,<%= yeoman.app %>}/scripts/**/*.js',
-          '<%= yeoman.app %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
+          '{.tmp,<%= yeoman.appStatic %>}/scripts/**/*.js',
+          '<%= yeoman.appStatic %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
     },
@@ -73,7 +77,7 @@ module.exports = function (grunt) {
               passport.initialize(),
               lrSnippet,
               mountFolder(connect, '.tmp'),
-              mountFolder(connect, yeomanConfig.app),
+              mountFolder(connect, yeomanConfig.appStatic),
               linkedinConnectorMiddleware
             ];
           }
@@ -90,7 +94,7 @@ module.exports = function (grunt) {
               lrSnippet,
               mountFolder(connect, '.tmp'),
               mountFolder(connect, 'test'),
-              mountFolder(connect, yeomanConfig.app),
+              mountFolder(connect, yeomanConfig.appStatic),
               linkedinConnectorMiddleware
             ];
           }
@@ -103,7 +107,7 @@ module.exports = function (grunt) {
               connect.bodyParser(),
               connect.query(),
               passport.initialize(),
-              mountFolder(connect, yeomanConfig.dist),
+              mountFolder(connect, yeomanConfig.distStatic),
               linkedinConnectorMiddleware
             ];
           }
@@ -129,7 +133,7 @@ module.exports = function (grunt) {
       },
       all: [
         'Gruntfile.js',
-        '<%= yeoman.app %>/scripts/**/*.js',
+        '<%= yeoman.appStatic %>/scripts/**/*.js',
         '<%= yeoman.server %>/**/*.js'
       ]
     },
@@ -137,10 +141,10 @@ module.exports = function (grunt) {
       dist: {
         files: {
           src: [
-            '<%= yeoman.dist %>/login/**/*.{js,css}',
-            '<%= yeoman.dist %>/app/**/*.{js,css}',
-            '<%= yeoman.dist %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}',
-            '<%= yeoman.dist %>/styles/fonts/*'
+            '<%= yeoman.distStatic %>/login/**/*.{js,css}',
+            '<%= yeoman.distStatic %>/app/**/*.{js,css}',
+            '<%= yeoman.distStatic %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}',
+            '<%= yeoman.distStatic %>/styles/fonts/*'
           ]
         }
       }
@@ -148,23 +152,23 @@ module.exports = function (grunt) {
     useminPrepare: {
       html: ['<%= yeoman.app %>/app.html', '<%= yeoman.app %>/login.html'],
       options: {
-        dest: '<%= yeoman.dist %>'
+        dest: '<%= yeoman.distStatic %>'
       }
     },
     usemin: {
       html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.dist %>/styles/**/*.css'],
+      css: ['<%= yeoman.distStatic %>/styles/**/*.css'],
       options: {
-        dirs: ['<%= yeoman.dist %>']
+        assetsDirs: ['<%= yeoman.distStatic %>']
       }
     },
     imagemin: {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>/images',
+          cwd: '<%= yeoman.appStatic %>/images',
           src: '**/*.{png,jpg,jpeg}',
-          dest: '<%= yeoman.dist %>/images'
+          dest: '<%= yeoman.distStatic %>/images'
         }]
       }
     },
@@ -182,7 +186,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.app %>',
-          src: ['*.html', 'app/**/*.html', 'login/**/*.html'],
+          src: ['*.html', 'static/app/**/*.html', 'static/login/**/*.html'],
           dest: '<%= yeoman.dist %>'
         }]
       }
@@ -197,14 +201,14 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>',
           src: [
             '*.{ico,png,txt}',
-            'bower_components/**/*',
-            'images/**/*.{gif,webp}',
-            'styles/fonts/*'
+            'static/bower_components/**/*',
+            'static/images/**/*.{gif,webp}',
+            'static/styles/fonts/*'
           ]
         }, {
           expand: true,
           cwd: '.tmp/images',
-          dest: '<%= yeoman.dist %>/images',
+          dest: '<%= yeoman.distStatic %>/images',
           src: [
             'generated/*'
           ]
@@ -212,7 +216,7 @@ module.exports = function (grunt) {
       },
       styles: {
         expand: true,
-        cwd: '<%= yeoman.app %>/styles',
+        cwd: '<%= yeoman.appStatic %>/styles',
         dest: '.tmp/styles/',
         src: '**/*.css'
       }
@@ -241,7 +245,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.dist %>/',
-          src: ['app/**/*.js', 'login/**/*.js'],
+          src: ['static/app/**/*.js', 'static/login/**/*.js'],
           dest: '<%= yeoman.dist %>/'
         }]
       }
