@@ -1,5 +1,6 @@
 'use strict';
 var passport = require('passport');
+var config = require('./config.json');
 var url = require('url');
 var path = require('path');
 var fs = require('fs');
@@ -44,14 +45,18 @@ function isLoginPageRedirectRequired(request){
 exports.loginAppHandler = function (envPath) {
   var resolvedPath = path.resolve(envPath);
 
-  function routeMiddleware(request, response) {
+  function routeMiddleware(request, response, next) {
 
     //TODO(adebski) if user is authenticated - pass to next handler
 
     if (isLoginPageRedirectRequired(request)){
       redirectToLoginPage(response);
     }else{
-      returnFile(response, resolvedPath);
+      if (request.method === 'GET' && request.path === '/login/'){
+        returnFile(response, resolvedPath);
+      }else{
+        next();
+      }
     }
   }
 
