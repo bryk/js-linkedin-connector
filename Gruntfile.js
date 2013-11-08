@@ -2,9 +2,8 @@
 'use strict';
 
 var LIVERELOAD_PORT = 35729;
-var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
 var path = require('path');
-var linkedinConnectorMiddleware = require('./server/linkedinConnectorMiddleware').linkedinConnectorMiddleware;
+var linkedinConnectorMiddleware = require('./server/linkedinConnectorMiddleware');
 var passport = require('passport');
 
 var mountFolder = function (connect, dir) {
@@ -71,13 +70,13 @@ module.exports = function (grunt) {
           open: true,
           middleware: function(connect){
             return [
+              connect.logger(),
               connect.bodyParser(),
               connect.query(),
               passport.initialize(),
-              lrSnippet,
               mountFolder(connect, '.tmp'),
               mountFolder(connect, yeomanConfig.appStatic),
-              linkedinConnectorMiddleware
+              linkedinConnectorMiddleware.loginAppHandler(yeomanConfig.app)
             ];
           }
         }
@@ -87,14 +86,14 @@ module.exports = function (grunt) {
           port: 9001,
           middleware: function(connect){
             return [
+              connect.logger(),
               connect.bodyParser(),
               connect.query(),
               passport.initialize(),
-              lrSnippet,
               mountFolder(connect, '.tmp'),
               mountFolder(connect, 'test'),
               mountFolder(connect, yeomanConfig.appStatic),
-              linkedinConnectorMiddleware
+              linkedinConnectorMiddleware.loginAppHandler(yeomanConfig.app)
             ];
           }
         }
@@ -103,11 +102,12 @@ module.exports = function (grunt) {
         options: {
           middleware: function(connect){
             return [
+              connect.logger(),
               connect.bodyParser(),
               connect.query(),
               passport.initialize(),
               mountFolder(connect, yeomanConfig.distStatic),
-              linkedinConnectorMiddleware
+              linkedinConnectorMiddleware.loginAppHandler(yeomanConfig.dist)
             ];
           }
         }

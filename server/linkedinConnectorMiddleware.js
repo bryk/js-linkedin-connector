@@ -1,34 +1,59 @@
 'use strict';
 var passport = require('passport');
-var LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
-var config = require('./config.json');
+var url = require('url');
+var path = require('path');
+var fs = require('fs');
 
-passport.use(new LinkedInStrategy({
-    clientID: config.apiKey,
-    clientSecret: config.secretKey,
-    callbackURL: 'http://localhost:9000/authorize/linkedin'
-  },
-  function (accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
-      return done(null, profile);
-    });
-  }
-));
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
 
-exports.linkedinConnectorMiddleware = function (request, response, next) {
-  if (request.url !== '/authorize/linkedin') {
-    next();
+passport.deserializeUser(function (obj, done) {
+  done(null, obj);
+});
+
+
+function redirectToLoginPage(response){
+  response.statusCode = 302;
+  response.setHeader('Location', '/login/');
+  response.end();
+}
+
+function returnFile(response, basePath){
+  fs.readFile(basePath + path.sep + 'login.html', function (err, html) {
+    if (err) {
+      throw err;
+    }
+    response.statusCode = 200;
+    response.setHeader('Content-Type', 'text/html');
+    response.write(html);
+    response.end();
+  });
+}
+
+function isLoginPageRedirectRequired(request){
+  var parsedUrl = url.parse(request.url);
+
+  if (parsedUrl.path !== '/login/'){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+exports.loginAppHandler = function (envPath) {
+  var resolvedPath = path.resolve(envPath);
+
+  function routeMiddleware(request, response) {
+
+    //TODO(adebski) if user is authenticated - pass to next handler
+
+    if (isLoginPageRedirectRequired(request)){
+      redirectToLoginPage(response);
+    }else{
+      returnFile(response, resolvedPath);
+    }
   }
 
-  var authenticateMiddleware;
-  if (request.method === 'POST') {
-    authenticateMiddleware = passport.authenticate('linkedin', { scope: ['r_basicprofile'], state: 'SOME STATE'});
-  } else {
-    authenticateMiddleware = passport.authenticate('linkedin', {
-      successRedirect: '/',
-      failureRedirect: '/login'
-    });
-  }
-  authenticateMiddleware(request, response, next);
+  return routeMiddleware;
 };
