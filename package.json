@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "passport": "~0.1.17",
+    "passport-local": "~0.1.6",
     "passport-linkedin-oauth2": "~1.0.1",
     "connect": "~2.11.0",
     "underscore": "~1.5.2"

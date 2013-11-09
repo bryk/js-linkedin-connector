@@ -3,7 +3,10 @@
 
 var LIVERELOAD_PORT = 35729;
 var path = require('path');
-var linkedinConnectorMiddleware = require('./server/linkedinConnectorMiddleware');
+var redirectAugumentMiddleware = require('./server/redirectAugumentMiddleware').redirectAugumentMiddleware;
+var loginRedirectMiddleware = require('./server/loginRedirectMiddleware').loginRedirectMiddleware;
+var loginApplicationMiddleware = require('./server/loginApplicationMiddleware').loginApplicationMiddleware;
+var loggedApplicationMiddleware = require('./server/loggedApplicationMiddleware').loggedApplicationMiddleware;
 var passport = require('passport');
 
 var mountFolder = function (connect, dir) {
@@ -65,19 +68,24 @@ module.exports = function (grunt) {
         hostname: 'localhost',
         livereload: LIVERELOAD_PORT
       },
-      livereload: {
+      dev: {
         options: {
           open: true,
           middleware: function(connect){
             return [
               connect.logger(),
               connect.bodyParser(),
+              connect.cookieParser(),
               connect.query(),
+              connect.session({secret: 'secret'}),
               passport.initialize(),
+              passport.session(),
+              redirectAugumentMiddleware,
               mountFolder(connect, '.tmp'),
               mountFolder(connect, yeomanConfig.appStatic),
-              linkedinConnectorMiddleware.loginRedirectMiddleware,
-              linkedinConnectorMiddleware.loginAppHandler(yeomanConfig.app)
+              loginRedirectMiddleware,
+              loginApplicationMiddleware(yeomanConfig.app),
+              loggedApplicationMiddleware(yeomanConfig.app)
             ];
           }
         }
@@ -93,9 +101,7 @@ module.exports = function (grunt) {
               passport.initialize(),
               mountFolder(connect, '.tmp'),
               mountFolder(connect, 'test'),
-              mountFolder(connect, yeomanConfig.appStatic),
-              linkedinConnectorMiddleware.loginRedirectMiddleware,
-              linkedinConnectorMiddleware.loginAppHandler(yeomanConfig.app)
+              mountFolder(connect, yeomanConfig.appStatic)
             ];
           }
         }
@@ -108,9 +114,7 @@ module.exports = function (grunt) {
               connect.bodyParser(),
               connect.query(),
               passport.initialize(),
-              mountFolder(connect, yeomanConfig.distStatic),
-              linkedinConnectorMiddleware.loginRedirectMiddleware,
-              linkedinConnectorMiddleware.loginAppHandler(yeomanConfig.dist)
+              mountFolder(connect, yeomanConfig.distStatic)
             ];
           }
         }
@@ -263,7 +267,7 @@ module.exports = function (grunt) {
       'clean:server',
       'concurrent:server',
       'autoprefixer',
-      'connect:livereload',
+      'connect:dev',
       'watch'
     ]);
   });
