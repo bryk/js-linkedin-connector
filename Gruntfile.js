@@ -97,11 +97,18 @@ module.exports = function (grunt) {
             return [
               connect.logger(),
               connect.bodyParser(),
+              connect.cookieParser(),
               connect.query(),
+              connect.session({secret: 'secret'}),
               passport.initialize(),
+              passport.session(),
+              redirectAugumentMiddleware,
               mountFolder(connect, '.tmp'),
-              mountFolder(connect, 'test'),
-              mountFolder(connect, yeomanConfig.appStatic)
+              mountFolder(connect, '.test'),
+              mountFolder(connect, yeomanConfig.appStatic),
+              loginRedirectMiddleware,
+              loginApplicationMiddleware(yeomanConfig.app),
+              loggedApplicationMiddleware(yeomanConfig.app)
             ];
           }
         }
@@ -112,9 +119,16 @@ module.exports = function (grunt) {
             return [
               connect.logger(),
               connect.bodyParser(),
+              connect.cookieParser(),
               connect.query(),
+              connect.session({secret: 'secret'}),
               passport.initialize(),
-              mountFolder(connect, yeomanConfig.distStatic)
+              passport.session(),
+              redirectAugumentMiddleware,
+              mountFolder(connect, yeomanConfig.distStatic),
+              loginRedirectMiddleware,
+              loginApplicationMiddleware(yeomanConfig.dist),
+              loggedApplicationMiddleware(yeomanConfig.dist)
             ];
           }
         }
