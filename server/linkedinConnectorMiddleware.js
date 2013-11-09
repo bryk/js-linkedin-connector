@@ -13,11 +13,32 @@ passport.deserializeUser(function (obj, done) {
   done(null, obj);
 });
 
+function isAuthenticated(request){
+  return false;
+}
 
 function redirectToLoginPage(response){
   response.statusCode = 302;
   response.setHeader('Location', '/login/');
   response.end();
+}
+
+function isLoginPageRedirectRequired(request){
+  var parsedUrl = url.parse(request.url);
+
+  if (isAuthenticated(request) === false && parsedUrl.path !== '/login/'){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+exports.loginRedirectMiddleware = function(request, response, next){
+  if (isLoginPageRedirectRequired(request)){
+    redirectToLoginPage(response);
+  }else{
+    next();
+  }
 }
 
 function returnFile(response, basePath){
@@ -32,31 +53,25 @@ function returnFile(response, basePath){
   });
 }
 
-function isLoginPageRedirectRequired(request){
-  var parsedUrl = url.parse(request.url);
-
-  if (parsedUrl.path !== '/login/'){
-    return true;
-  }else{
-    return false;
-  }
-}
-
 exports.loginAppHandler = function (envPath) {
   var resolvedPath = path.resolve(envPath);
 
   function routeMiddleware(request, response, next) {
+    var parsedUrl = url.parse(request.url);
 
-    //TODO(adebski) if user is authenticated - pass to next handler
-
-    if (isLoginPageRedirectRequired(request)){
-      redirectToLoginPage(response);
-    }else{
-      if (request.method === 'GET' && request.path === '/login/'){
-        returnFile(response, resolvedPath);
-      }else{
-        next();
+    if(parsedUrl.path === '/login/'){
+      switch(request.method){
+        case 'GET':
+          returnFile(response, resolvedPath);
+          break;
+        case 'POST':
+          //TODO(adebski) - handle login request
+          break;
+        default:
+          next();
       }
+    }else{
+      next();
     }
   }
 
