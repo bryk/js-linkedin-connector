@@ -45,7 +45,6 @@ exports.loginAppHandler = function (envPath) {
   var resolvedPath = path.resolve(envPath);
 
   function routeMiddleware(request, response) {
-
     //TODO(adebski) if user is authenticated - pass to next handler
 
     if (isLoginPageRedirectRequired(request)){
@@ -56,4 +55,11 @@ exports.loginAppHandler = function (envPath) {
   }
 
   return routeMiddleware;
+};
+
+exports.addAccessHeader = function() {
+  return function(req, response, next) {
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  };
 };

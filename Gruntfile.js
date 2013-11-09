@@ -76,6 +76,8 @@ module.exports = function (grunt) {
               passport.initialize(),
               mountFolder(connect, '.tmp'),
               mountFolder(connect, yeomanConfig.appStatic),
+              mountFolder(connect, yeomanConfig.app), // TODO(bryk): Remove this.
+              linkedinConnectorMiddleware.addAccessHeader(),
               linkedinConnectorMiddleware.loginAppHandler(yeomanConfig.app)
             ];
           }
@@ -93,6 +95,7 @@ module.exports = function (grunt) {
               mountFolder(connect, '.tmp'),
               mountFolder(connect, 'test'),
               mountFolder(connect, yeomanConfig.appStatic),
+              linkedinConnectorMiddleware.addAccessHeader(),
               linkedinConnectorMiddleware.loginAppHandler(yeomanConfig.app)
             ];
           }
@@ -107,6 +110,7 @@ module.exports = function (grunt) {
               connect.query(),
               passport.initialize(),
               mountFolder(connect, yeomanConfig.distStatic),
+              linkedinConnectorMiddleware.addAccessHeader(),
               linkedinConnectorMiddleware.loginAppHandler(yeomanConfig.dist)
             ];
           }
