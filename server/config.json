@@ -3,6 +3,11 @@
     {
       "login": "exampleLogin",
       "password": "examplePassword"
+    },
+    {
+      "login": "q",
+      "password": "q"
     }
   ]
 }
+

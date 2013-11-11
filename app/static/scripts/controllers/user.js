@@ -1,9 +1,12 @@
 'use strict';
 
 angular.module('jsLinkedinConnectorApp')
-  .controller('UserCtrl', ['$scope', function($scope) {
-      $scope.doSomething = function() {
-        // TODO(bryk): Implement this.
-      };
+  .controller('UserCtrl', ['$scope', 'OAuthService', function($scope, oauth) {
+      $scope.name = 'Unknown';
+      oauth.getMyProfile(function(json) {
+        $scope.$apply(function() {
+          $scope.name = json.headline;
+        });
+      });
     }]);
 
