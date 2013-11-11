@@ -8,6 +8,16 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
     isLoggedIn: function() {
       return this.loggedIn;
     },
+    canAccess: function(next) {
+      var ret = !next.$$route || !next.$$route.access || next.$$route.access && this.isLoggedIn();
+      var url = next.$$route && next.$$route.templateUrl || null;
+      if (ret) {
+        window.console.log('Granted access to', url);
+      } else {
+        window.console.log('Denied access to', url);
+      }
+      return ret;
+    },
     login: function(callback) {
       IN.User.authorize(callback, {});
     },

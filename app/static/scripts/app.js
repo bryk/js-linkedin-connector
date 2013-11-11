@@ -21,5 +21,11 @@ angular.module('jsLinkedinConnectorApp', [
       });
     $locationProvider.hashPrefix('!');
     $locationProvider.html5Mode(false);
+  }]).run(['$rootScope', '$location', 'OAuthService', function ($rootScope, $location, oauthService) {
+    $rootScope.$on('$routeChangeStart', function (event, next) {
+      if (next.$$route && !oauthService.canAccess(next)) {
+        $location.path('/oauth');
+      }
+    });
   }]);
 
