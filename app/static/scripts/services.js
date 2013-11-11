@@ -4,6 +4,7 @@
 
 angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
   var oauthService = {
+    scriptLoaded: false,
     loggedIn: false,
     isLoggedIn: function() {
       return this.loggedIn;
@@ -19,7 +20,10 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
       return ret;
     },
     login: function(callback) {
-      IN.User.authorize(callback, {});
+      IN.User.authorize(function() {
+        this.loggedIn = true;
+        callback();
+      }, this);
     },
     getApi: function() {
       return IN.API;
@@ -28,20 +32,30 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
       this.getApi().Profile('me').result(function(result) {
         callback(result.values[0]);
       });
+    },
+    onLoad: function(callback) {
+      if (this.scriptLoaded) {
+        window.setTimeout(callback, 0);
+      } else {
+        this.loadCallback = callback;
+      }
     }
   };
   var callbackName = 'onLinkedInLoad';
   IN.init({
     onLoad: callbackName,
     api_key: '5tmpoi0a2ucp',
-    authorize: true
+    authorize: false
   });
   window[callbackName] = function() {
     console.log('LinkedIn script loaded');
+    oauthService.scriptLoaded = true;
     IN.Event.on(IN, 'auth', function() {
-      window.console.log('Authorized to LinkedIn');
-      oauthService.loggedIn = true;
+      window.console.log('Authorized to LinkedIn for the first time');
     });
+    if (oauthService.loadCallback) {
+      oauthService.loadCallback();
+    }
   };
   return oauthService;
 }]);

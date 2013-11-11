@@ -2,6 +2,6 @@
   <h2>
     Now sign in using you LinkedIn account
   </h2>
-  <a ng-click="doLogin()" class="btn btn-primary">Sign in</a>
+  <a ng-disabled="loaded" ng-click="doLogin()" class="btn btn-primary">{{buttonLabel}}</a>
 </div>
 
