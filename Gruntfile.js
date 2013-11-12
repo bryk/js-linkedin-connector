@@ -269,6 +269,12 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>/'
         }]
       }
+    },
+    jasmine_node:{
+      specNameMatcher: 'spec',
+      projectRoot: "./server_test",
+      requirejs: false,
+      forceExit: true
     }
   });
 
