@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('jsLinkedinConnectorApp', [])
+angular.module('jsLinkedinConnectorApp', ['ngRoute'])
   .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
       .when('/user', {

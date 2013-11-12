@@ -1,8 +1,14 @@
 <div class="col-md-8 col-md-offset-2 app-content">
   <p class="lead">Hi, {{name}}!</p>
   <p class="muted">{{headline}}</p>
-  <p ng-repeat="connection in connections">
-    {{connection.firstName}}
-  </p>
+  <div class="connection" ng-repeat="connection in connections">
+    <p class="name">{{connection.firstName}} {{connection.lastName}}</p>
+    <p class="headline">{{connection.headline}}</p>
+    <p >
+      <img ng-if="connection.pictureUrl" src="{{connection.pictureUrl}}" class="picture"></img>
+      <img ng-if="!connection.pictureUrl" src="/images/person.png" class="picture"></img>
+    </p>
+    <a href="{{connection.siteStandardProfileRequest.url}}">Profile</a>
+  </div>
 </div>
 

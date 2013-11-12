@@ -42,7 +42,7 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
         api_key: '5tmpoi0a2ucp',
         authorize: true
       };
-      if (window.APP_DEBUG != undefined) {
+      if (window.APP_DEBUG !== undefined) {
         config.scope = scope;
       }
       IN.init(config);
