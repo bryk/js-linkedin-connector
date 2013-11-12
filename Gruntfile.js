@@ -26,7 +26,8 @@ module.exports = function (grunt) {
   var yeomanConfig ={
       app: require('./bower.json').appPath || 'app',
       dist: 'dist',
-      server: 'server'
+      server: 'server',
+      serverTest: 'server_test'
     };
   yeomanConfig.appStatic = yeomanConfig.app + path.sep + 'static';
   yeomanConfig.distStatic = yeomanConfig.dist + path.sep + 'static';
@@ -154,7 +155,8 @@ module.exports = function (grunt) {
       all: [
         'Gruntfile.js',
         '<%= yeoman.appStatic %>/scripts/**/*.js',
-        '<%= yeoman.server %>/**/*.js'
+        '<%= yeoman.server %>/**/*.js',
+        '<%= yeoman.serverTest %>/**/*.js'
       ]
     },
     rev: {
@@ -270,9 +272,10 @@ module.exports = function (grunt) {
         }]
       }
     },
+    /* jshint camelcase: false */
     jasmine_node:{
       specNameMatcher: 'spec',
-      projectRoot: "./server_test",
+      projectRoot: './server_test',
       requirejs: false,
       forceExit: true
     }
