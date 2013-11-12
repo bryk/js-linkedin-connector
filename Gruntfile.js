@@ -213,6 +213,11 @@ module.exports = function (grunt) {
       }
     },
     // Put files not handled in other tasks here
+    uglify: {
+      options: {
+        banner: 'window.APP_DEBUG = false;'
+      }
+    },
     copy: {
       dist: {
         files: [{

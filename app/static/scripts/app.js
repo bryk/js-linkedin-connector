@@ -1,10 +1,6 @@
 'use strict';
 
-angular.module('jsLinkedinConnectorApp', [
-  'ngCookies',
-  'ngResource',
-  'ngSanitize'
-])
+angular.module('jsLinkedinConnectorApp', [])
   .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
       .when('/user', {

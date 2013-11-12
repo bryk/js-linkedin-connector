@@ -10,5 +10,12 @@ angular.module('jsLinkedinConnectorApp')
         $scope.headline = json.headline;
       });
     });
+    $scope.connections = [];
+    oauth.getMyConnections(function(json) {
+      window.console.log(json);
+      $scope.$apply(function() {
+        $scope.connections = json;
+      });
+    });
   }]);
 

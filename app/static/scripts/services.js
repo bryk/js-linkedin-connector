@@ -2,6 +2,7 @@
 /* jshint camelcase: false */
 'use strict';
 
+
 angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
   var oauthService = {
     privileges: [],
@@ -29,14 +30,23 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
         callback(result.values[0]);
       });
     },
+    getMyConnections: function(callback) {
+      IN.API.Connections('me').result(function(json) {
+        callback(json.values);
+      });
+    },
     loadApiInternal: function(scope, callback) {
       var callbackName = 'onLinkedInLoad';
-      IN.init({
+      var config = {
         onLoad: callbackName,
         api_key: '5tmpoi0a2ucp',
-        authorize: false,
-        scope: scope
-      });
+        authorize: true
+      };
+      if (window.APP_DEBUG != undefined) {
+        config.scope = scope;
+      }
+      IN.init(config);
+
       window[callbackName] = function() {
         console.log('LinkedIn script loaded');
         IN.Event.on(IN, 'auth', function() {
