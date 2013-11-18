@@ -6,6 +6,7 @@
 angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
   var oauthService = {
     privileges: [],
+    lastError: null,
     canAccess: function(next) {
       var ret = !next.$$route || !next.$$route.access;
       if (next.$$route.access) {
@@ -15,8 +16,14 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
       if (ret) {
         window.console.log('Granted access to', url + ',', 'current privileges:', this.privileges);
       } else {
+        this.lastError = 'Cannot access this page, because you need "' + next.$$route.access + '" privileges';
         window.console.log('Denied access to', url + ',', 'current privileges:', this.privileges);
       }
+      return ret;
+    },
+    getAndClearLastError: function() {
+      var ret = this.lastError;
+      this.lastError = null;
       return ret;
     },
     loginAsUser: function(callback) {

@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('jsLinkedinConnectorApp')
-  .controller('UserCtrl', ['$scope', 'OAuthService', function($scope, oauth) {
+  .controller('UserCtrl', ['$scope', 'OAuthService', '$location', function($scope, oauth, $location) {
+    $scope.location = $location;
     $scope.name = '';
     $scope.headline = '';
     oauth.getMyProfile(function(json) {
@@ -12,7 +13,6 @@ angular.module('jsLinkedinConnectorApp')
     });
     $scope.connections = [];
     oauth.getMyConnections(function(json) {
-      window.console.log(json);
       $scope.$apply(function() {
         $scope.connections = json;
       });

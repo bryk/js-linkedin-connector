@@ -12,15 +12,25 @@ angular.module('jsLinkedinConnectorApp', ['ngRoute'])
         templateUrl: '/app/views/oauth.html',
         controller: 'OauthCtrl'
       })
+      .when('/admin', {
+        templateUrl: '/app/views/admin.html',
+        controller: 'AdminCtrl',
+        access: 'admin'
+      })
       .otherwise({
         redirectTo: '/oauth'
       });
     $locationProvider.hashPrefix('!');
     $locationProvider.html5Mode(false);
   }]).run(['$rootScope', '$location', 'OAuthService', function ($rootScope, $location, oauthService) {
-    $rootScope.$on('$routeChangeStart', function (event, next) {
+    $rootScope.$on('$routeChangeStart', function (event, next, prev) {
       if (next.$$route && !oauthService.canAccess(next)) {
-        $location.path('/oauth');
+        event.preventDefault();
+        if (prev && prev.$$route && oauthService.canAccess(prev)) {
+          $location.path(prev.$$route.originalPath);
+        } else {
+          $location.path('/oauth');
+        }
       }
     });
   }]);
