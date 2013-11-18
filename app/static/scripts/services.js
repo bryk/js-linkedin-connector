@@ -6,25 +6,35 @@
 angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
   var oauthService = {
     privileges: [],
-    lastError: null,
+    checkPrivileges: function(next, prev, $rootScope, $location) {
+      var url = next.$$route && next.$$route.templateUrl || null;
+      if (next.$$route && !oauthService.canAccess(next)) {
+        $rootScope.lastError = 'Cannot access this page, because you need "' + next.$$route.access + '" privilege';
+        window.console.log('Denied access to', url + ',', 'current privileges:', oauthService.privileges);
+        if (prev && prev.$$route && oauthService.canAccess(prev)) {
+          $location.path(prev.$$route.originalPath);
+        } else {
+          $location.path('/oauth');
+        }
+      } else {
+        if ($rootScope.lastError) {
+          $rootScope.authError = $rootScope.lastError;
+          $rootScope.lastError = null;
+        } else {
+          $rootScope.authError = null;
+        }
+        window.console.log('Granted access to', url + ',', 'current privileges:', oauthService.privileges);
+      }
+    },
     canAccess: function(next) {
       var ret = !next.$$route || !next.$$route.access;
       if (next.$$route.access) {
         ret = this.privileges.indexOf(next.$$route.access) !== -1;
       }
-      var url = next.$$route && next.$$route.templateUrl || null;
-      if (ret) {
-        window.console.log('Granted access to', url + ',', 'current privileges:', this.privileges);
-      } else {
-        this.lastError = 'Cannot access this page, because you need "' + next.$$route.access + '" privileges';
-        window.console.log('Denied access to', url + ',', 'current privileges:', this.privileges);
-      }
       return ret;
     },
-    getAndClearLastError: function() {
-      var ret = this.lastError;
-      this.lastError = null;
-      return ret;
+    logout: function() {
+      this.privileges = [];
     },
     loginAsUser: function(callback) {
       this.loginInternal('r_basicprofile r_network', ['user'], callback);
