@@ -6,6 +6,7 @@
 angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
   var oauthService = {
     privileges: [],
+    scriptLoaded: false,
     checkPrivileges: function(next, prev, $rootScope, $location) {
       var url = next.$$route && next.$$route.templateUrl || null;
       if (next.$$route && !oauthService.canAccess(next)) {
@@ -32,6 +33,10 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
         ret = this.privileges.indexOf(next.$$route.access) !== -1;
       }
       return ret;
+    },
+    searchPeople: function(firstName, callback) {
+      IN.API.PeopleSearch()
+        .params({'keywords': firstName}).result(callback);
     },
     logout: function() {
       this.privileges = [];

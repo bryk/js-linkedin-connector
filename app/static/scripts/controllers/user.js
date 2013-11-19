@@ -1,20 +1,25 @@
 'use strict';
 
 angular.module('jsLinkedinConnectorApp')
-.controller('UserCtrl', ['$scope', 'OAuthService', '$location', function($scope, oauth, $location) {
-  $scope.location = $location;
-  $scope.name = '';
-  $scope.headline = '';
+.controller('UserCtrl', ['$rootScope', '$scope', 'OAuthService', function($rootScope, $scope, oauth) {
+  if (!$rootScope.name) {
+    $rootScope.name = '';
+  }
+  if (!$rootScope.headline) {
+    $rootScope.headline = '';
+  }
   oauth.getMyProfile(function(json) {
-    $scope.$apply(function() {
-      $scope.name = json.firstName;
-      $scope.headline = json.headline;
+    $rootScope.$apply(function() {
+      $rootScope.name = json.firstName;
+      $rootScope.headline = json.headline;
     });
   });
-  $scope.connections = [];
+  if (!$rootScope.connections) {
+    $rootScope.connections = [];
+  }
   oauth.getMyConnections(function(json) {
-    $scope.$apply(function() {
-      $scope.connections = json;
+    $rootScope.$apply(function() {
+      $rootScope.connections = json;
     });
   });
 }]);

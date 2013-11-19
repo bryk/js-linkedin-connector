@@ -1,6 +1,22 @@
-<div class="col-md-8 col-md-offset-2 app-content">
+<div menubar></div>
+<div class="app-content">
   <p authentication-error></p>
   <p class="lead">Hi, {{name}}!</p>
   <p class="muted">{{headline}}</p>
+  <form class="form-horizontal">
+    <label>Search for people:</label>
+    <input type="text" class="form-control" ng-model="search" class="input-medium search-query" placeholder="First name">
+  </form>
+  <div class="connection" ng-repeat="connection in searchResults">
+    <p class="name">{{connection.firstName}} {{connection.lastName}}</p>
+    <p class="headline">{{connection.headline}}</p>
+    <p >
+    <img ng-if="connection.pictureUrl" ng-src="{{connection.pictureUrl}}" class="picture"></img>
+    <img ng-if="!connection.pictureUrl" ng-src="/images/person.png" class="picture"></img>
+    </p>
+    <a class="profile" href="{{connection.siteStandardProfileRequest.url}}">Profile</a>
+    <a class="profile" href="" ng-href="connect()">Connect</a>
+  </div>
+
 </div>
 

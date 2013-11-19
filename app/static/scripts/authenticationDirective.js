@@ -1,6 +1,5 @@
 'use strict';
 
-
 angular.module('jsLinkedinConnectorApp').directive('authenticationError', [function() {
   return {
     restrict: 'A',
