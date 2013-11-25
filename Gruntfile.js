@@ -22,6 +22,7 @@ var mountFolder = function (connect, dir) {
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
   require('time-grunt')(grunt);
+  grunt.loadNpmTasks('grunt-jasmine-node');
 
   var yeomanConfig ={
       app: require('./bower.json').appPath || 'app',
@@ -278,9 +279,9 @@ module.exports = function (grunt) {
     },
     /* jshint camelcase: false */
     jasmine_node:{
-      specNameMatcher: 'spec',
+      specNameMatcher: 'Spec',
       projectRoot: './server_test',
-      requirejs: false,
+
       forceExit: true
     }
   });
