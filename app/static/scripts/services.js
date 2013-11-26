@@ -3,7 +3,7 @@
 'use strict';
 
 
-angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
+angular.module('jsLinkedinConnectorApp').factory('OAuthService', ['$rootScope', function($rootScope) {
   var oauthService = {
     privileges: [],
     scriptLoaded: false,
@@ -34,9 +34,14 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
       }
       return ret;
     },
+    invite: function() {
+     
+    },
     searchPeople: function(firstName, callback) {
       IN.API.PeopleSearch()
-        .params({'keywords': firstName}).result(callback);
+        .fields(['first-name', 'last-name', 'headline', 'picture-url', 'public-profile-url', 'id', 'api-standard-profile-request'])
+        .params({'keywords': firstName})
+        .result(callback);
     },
     logout: function() {
       this.privileges = [];
@@ -82,6 +87,16 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', [function() {
       this.loadApiInternal(scope, function() {
         IN.User.authorize(function() {
           self.privileges = privileges;
+          $rootScope.$apply(function() {
+            $rootScope.name = '';
+            $rootScope.headline = '';
+            oauthService.getMyProfile(function(json) {
+              $rootScope.$apply(function() {
+                $rootScope.name = json.firstName;
+                $rootScope.headline = json.headline;
+              });
+            });
+          });
           callback();
         });
       });

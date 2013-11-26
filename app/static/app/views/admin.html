@@ -6,6 +6,7 @@
   <form class="form-horizontal">
     <label>Search for people:</label>
     <input type="text" class="form-control" ng-model="search" class="input-medium search-query" placeholder="First name">
+    <button class="btn btn-primary" ng-click="doSearch()">Search</button>
   </form>
   <div class="connection" ng-repeat="connection in searchResults">
     <p class="name">{{connection.firstName}} {{connection.lastName}}</p>
@@ -14,9 +15,8 @@
     <img ng-if="connection.pictureUrl" ng-src="{{connection.pictureUrl}}" class="picture"></img>
     <img ng-if="!connection.pictureUrl" ng-src="/images/person.png" class="picture"></img>
     </p>
-    <a class="profile" href="{{connection.siteStandardProfileRequest.url}}">Profile</a>
-    <a class="profile" href="" ng-href="connect()">Connect</a>
+    <a class="profile" href="{{connection.publicProfileUrl}}">Profile</a>
+    <a class="profile" href="" ng-click="doConnect(connection.index)">Connect</a>
   </div>
-
 </div>
 
