@@ -2,12 +2,6 @@
 
 angular.module('jsLinkedinConnectorApp')
 .controller('AdminCtrl', ['$rootScope', '$scope', 'OAuthService', function($rootScope, $scope, oauth) {
-  if (!$rootScope.name) {
-    $rootScope.name = '';
-  }
-  if (!$rootScope.headline) {
-    $rootScope.headline = '';
-  }
   oauth.getMyProfile(function(json) {
     $rootScope.$apply(function() {
       $rootScope.name = json.firstName;
