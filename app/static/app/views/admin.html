@@ -16,7 +16,7 @@
     <img ng-if="!connection.pictureUrl" ng-src="/images/person.png" class="picture"></img>
     </p>
     <a class="profile" href="{{connection.publicProfileUrl}}">Profile</a>
-    <a class="profile" href="" ng-click="doConnect(connection.index)">Connect</a>
+    <a ng-show="!connection.isConnected" class="profile" href="" ng-click="doConnect(connection)">Connect</a>
   </div>
 </div>
 
