@@ -34,9 +34,12 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', ['$rootScope', 
       }
       return ret;
     },
+    invite: function() {
+     
+    },
     searchPeople: function(firstName, callback) {
       IN.API.PeopleSearch()
-        .fields(['first-name', 'last-name', 'headline', 'picture-url', 'public-profile-url'])
+        .fields(['first-name', 'last-name', 'headline', 'picture-url', 'public-profile-url', 'id', 'api-standard-profile-request'])
         .params({'keywords': firstName})
         .result(callback);
     },
