@@ -295,6 +295,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('test', [
+    'jasmine_node',
     'clean:server',
     'concurrent:test',
     'autoprefixer',
