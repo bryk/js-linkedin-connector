@@ -59,5 +59,5 @@ describe('util module', function(){
     };
 
     expect(util.isPathEqualTo(request, paths)).toBe(false);
-  })
+  });
 });

@@ -3,7 +3,7 @@
 
 var LIVERELOAD_PORT = 35729;
 var path = require('path');
-var redirectAugumentMiddleware = require('./server/redirectAugumentMiddleware').redirectAugumentMiddleware;
+var redirectAugumentMiddleware = require('./server/redirectAugmentMiddleware').redirectAugmentMiddleware;
 var loginRedirectMiddleware = require('./server/loginRedirectMiddleware').loginRedirectMiddleware;
 var loginApplicationMiddleware = require('./server/loginApplicationMiddleware').loginApplicationMiddleware;
 var loggedApplicationMiddleware = require('./server/loggedApplicationMiddleware').loggedApplicationMiddleware;
