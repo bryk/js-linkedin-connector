@@ -99,7 +99,7 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', ['$rootScope', 
       if (!this.scriptLoaded) {
         IN.init(config);
       } else {
-        callback();
+        window.setTimeout(callback, 0);
       }
 
       var self = this;
@@ -120,6 +120,7 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', ['$rootScope', 
           $rootScope.$apply(function() {
             $rootScope.name = '';
             $rootScope.headline = '';
+            $rootScope.connections = [];
             oauthService.getMyProfile(function(json) {
               $rootScope.$apply(function() {
                 $rootScope.name = json.firstName;

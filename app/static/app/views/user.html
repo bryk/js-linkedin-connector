@@ -3,14 +3,19 @@
   <div authentication-error></div>
   <p class="lead">Hi, {{name}}!</p>
   <p class="muted">{{headline}}</p>
-  <div class="connection" ng-repeat="connection in connections">
-    <p class="name">{{connection.firstName}} {{connection.lastName}}</p>
-    <p class="headline">{{connection.headline}}</p>
-    <p >
-      <img ng-if="connection.pictureUrl" ng-src="{{connection.pictureUrl}}" class="picture"></img>
-      <img ng-if="!connection.pictureUrl" ng-src="/images/person.png" class="picture"></img>
-    </p>
-    <a class="profile" href="{{connection.publicProfileUrl}}">Profile</a>
+  <p>All your connections:</p>
+  <div class="connections">
+    <div class="connection" ng-repeat="connection in connections">
+      <p ng-if="!connection.publicProfileUrl" class="name lead">{{connection.firstName}} {{connection.lastName}}</p>
+      <a ng-if="connection.publicProfileUrl" class="name lead" href="{{connection.publicProfileUrl}}">
+        {{connection.firstName}} {{connection.lastName}}
+      </a>
+      <p class="headline small">{{connection.headline}}</p>
+      <p >
+        <img ng-if="connection.pictureUrl" ng-src="{{connection.pictureUrl}}" class="picture img-thumbnail"></img>
+        <img ng-if="!connection.pictureUrl" ng-src="/images/person.png" class="picture img-thumbnail"></img>
+      </p>
+    </div>
   </div>
 </div>
 

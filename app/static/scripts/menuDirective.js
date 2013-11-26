@@ -9,9 +9,10 @@ angular.module('jsLinkedinConnectorApp').directive('menubar', ['$location', func
       $scope.menuClick = function(path) {
         location.path(path);
       };
-      $scope.isActive = function(/*name*/) {
-        return false;
+      $scope.isActive = function(name) {
+        return $scope.activeMenu === name;
       };
+      $scope.activeMenu = location.path();
     }
   };
 }]);

@@ -3,12 +3,6 @@
 
 angular.module('jsLinkedinConnectorApp')
 .controller('AdminCtrl', ['$rootScope', '$scope', 'OAuthService', function($rootScope, $scope, oauth) {
-  oauth.getMyProfile(function(json) {
-    $rootScope.$apply(function() {
-      $rootScope.name = json.firstName;
-      $rootScope.headline = json.headline;
-    });
-  });
   $scope.doSearch = function() {
     var search = $scope.search;
     if (search) {

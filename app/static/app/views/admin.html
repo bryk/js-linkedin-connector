@@ -8,15 +8,20 @@
     <input type="text" class="form-control" ng-model="search" class="input-medium search-query" placeholder="First name">
     <button class="btn btn-primary" ng-click="doSearch()">Search</button>
   </form>
-  <div class="connection" ng-repeat="connection in searchResults">
-    <p class="name">{{connection.firstName}} {{connection.lastName}}</p>
-    <p class="headline">{{connection.headline}}</p>
-    <p >
-    <img ng-if="connection.pictureUrl" ng-src="{{connection.pictureUrl}}" class="picture"></img>
-    <img ng-if="!connection.pictureUrl" ng-src="/images/person.png" class="picture"></img>
-    </p>
-    <a class="profile" href="{{connection.publicProfileUrl}}">Profile</a>
-    <a ng-show="!connection.isConnected" class="profile" href="" ng-click="doConnect(connection)">Connect</a>
+
+  <div class="connections">
+    <div class="connection" ng-repeat="connection in searchResults">
+      <p ng-if="!connection.publicProfileUrl" class="name lead">{{connection.firstName}} {{connection.lastName}}</p>
+      <a ng-if="connection.publicProfileUrl" class="name lead" href="{{connection.publicProfileUrl}}">
+        {{connection.firstName}} {{connection.lastName}}
+      </a>
+      <p class="headline small">{{connection.headline}}</p>
+      <p >
+        <img ng-if="connection.pictureUrl" ng-src="{{connection.pictureUrl}}" class="picture img-thumbnail"></img>
+        <img ng-if="!connection.pictureUrl" ng-src="/images/person.png" class="picture img-thumbnail"></img>
+      </p>
+      <a ng-show="!connection.isConnected" class="profile" href="" ng-click="doConnect(connection)">Connect</a>
+    </div>
   </div>
 </div>
 

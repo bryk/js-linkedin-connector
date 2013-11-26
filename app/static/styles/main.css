@@ -3,6 +3,30 @@ body {
   color: #333;
 }
 
+.connections {
+  column-count: auto;
+  column-width: 200px;
+}
+
+.connection {
+  margin-bottom: 1em;
+  background: white;
+  padding: 1em;
+  text-align: center;
+  break-inside: avoid;
+  width: 100%;
+  display: inline-block;
+}
+
+.picture {
+  display: block;
+  margin: 0 auto;
+}
+
+.name {
+  margin-bottom: 5px;
+}
+
 .single-form, .app-content {
   margin-top: 55px;
   background-color: #eee;
