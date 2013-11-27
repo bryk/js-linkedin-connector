@@ -4,10 +4,16 @@
   <p class="lead">Hi, {{name}}!</p>
   <p class="muted">{{headline}}</p>
   <form class="form-horizontal">
-    <label>Search for people:</label>
-    <input type="text" class="form-control" ng-model="search" class="input-medium search-query" placeholder="First name">
-    <button class="btn btn-primary" ng-click="doSearch()">Search</button>
+    <div class="form-group">
+      <div class="col-sm-10">
+        <input type="text" class="form-control input-medium search-query" ng-model="search" placeholder="Keywords">
+      </div>
+      <div class="col-sm-2">
+        <button ng-disabled="working" class="btn btn-block btn-primary" ng-click="doSearch()">Search</button>
+      </div>
+    </div>  
   </form>
+  <div class="clearfix"></div>
 
   <div class="connections">
     <div class="connection" ng-repeat="connection in searchResults">

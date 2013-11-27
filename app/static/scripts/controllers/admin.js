@@ -3,11 +3,14 @@
 
 angular.module('jsLinkedinConnectorApp')
 .controller('AdminCtrl', ['$rootScope', '$scope', 'OAuthService', function($rootScope, $scope, oauth) {
+  $scope.working = false;
   $scope.doSearch = function() {
     var search = $scope.search;
-    if (search) {
+    if (search && $scope.working === false) {
+      $scope.working = true;
       oauth.searchPeople(search, function(json) {
         $scope.$apply(function() {
+          $scope.working = false;
           var goodPeople = [];
           $(json.people.values).each(function(index, user) {
             var headers = user.apiStandardProfileRequest && user.apiStandardProfileRequest.headers.values || null;
