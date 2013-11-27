@@ -22,7 +22,8 @@ angular.module('jsLinkedinConnectorApp')
                 if (header.name === 'x-li-auth-token') {
                   var values = header.value.split(':');
                   user.authToken = {key: values[0], value: values[1]};
-                  user.index = goodPeople.push(user) - 1;
+                  user.isConnected = false;
+                  goodPeople.push(user);
                 }
               });
             }
@@ -35,8 +36,9 @@ angular.module('jsLinkedinConnectorApp')
     }
   };
 
-  $scope.doConnect = function(index) {
-    window.console.log(index);
+  $scope.doConnect = function(user) {
+    user.isConnected = true;
+    oauth.invite(user);
   };
 }]);
 

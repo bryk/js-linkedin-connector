@@ -34,8 +34,27 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', ['$rootScope', 
       }
       return ret;
     },
-    invite: function() {
-     
+    invite: function(user, callback, error) {
+      var body ={
+        'recipients': {
+          'values': [{
+            'person': {'_path': '/people/' + user.id}
+          }]
+        },
+        'subject': 'AGH TAI: Invitation to connect',
+        'body': 'I am just testing my TAI application. Say yes!',
+        'item-content': {
+          'invitation-request': {
+            'connect-type': 'friend',
+            'authorization': {
+              'name': user.authToken.key,
+              'value': user.authToken.value
+            }
+          }
+        }
+      };
+      body = JSON.stringify(body);
+      IN.API.Raw('/people/~/mailbox').method('POST').body(body).result(callback).error(error);
     },
     searchPeople: function(firstName, callback) {
       IN.API.PeopleSearch()
@@ -44,13 +63,16 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', ['$rootScope', 
         .result(callback);
     },
     logout: function() {
+      if (this.privileges.length) {
+        IN.UI.Logout().place();
+      }
       this.privileges = [];
     },
     loginAsUser: function(callback) {
-      this.loginInternal('r_basicprofile r_network', ['user'], callback);
+      this.loginInternal('r_basicprofile r_fullprofile r_network', ['user'], callback);
     },
     loginAsAdmin: function(callback) {
-      this.loginInternal('r_basicprofile r_network w_messages', ['user', 'admin'], callback);
+      this.loginInternal('r_basicprofile r_fullprofile r_network w_messages', ['user', 'admin'], callback);
     },
     getMyProfile: function(callback) {
       IN.API.Profile('me').result(function(result) {
@@ -58,7 +80,8 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', ['$rootScope', 
       });
     },
     getMyConnections: function(callback) {
-      IN.API.Connections('me').result(function(json) {
+      IN.API.Connections('me').fields(['first-name', 'last-name', 'headline', 'picture-url', 'public-profile-url', 'id', 'api-standard-profile-request'])
+        .result(function(json) {
         callback(json.values);
       });
     },
@@ -67,15 +90,22 @@ angular.module('jsLinkedinConnectorApp').factory('OAuthService', ['$rootScope', 
       var config = {
         onLoad: callbackName,
         api_key: '5tmpoi0a2ucp',
-        authorize: true
+        authorize: true,
+        secure: false
       };
       if (window.APP_DEBUG !== undefined) {
         config.scope = scope;
       }
-      IN.init(config);
+      if (!this.scriptLoaded) {
+        IN.init(config);
+      } else {
+        callback();
+      }
 
+      var self = this;
       window[callbackName] = function() {
         console.log('LinkedIn script loaded');
+        self.scriptLoaded = true;
         IN.Event.on(IN, 'auth', function() {
           window.console.log('Authorized to LinkedIn for the first time');
         });
