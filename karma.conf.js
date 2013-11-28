@@ -1,3 +1,4 @@
+'use strict';
 // Karma configuration
 // http://karma-runner.github.io/0.10/config/configuration-file.html
 
@@ -13,9 +14,6 @@ module.exports = function(config) {
     files: [
       'app/static/bower_components/angular/angular.js',
       'app/static/bower_components/angular-mocks/angular-mocks.js',
-      'app/static/bower_components/angular-resource/angular-resource.js',
-      'app/static/bower_components/angular-cookies/angular-cookies.js',
-      'app/static/bower_components/angular-sanitize/angular-sanitize.js',
       'app/static/bower_components/angular-route/angular-route.js',
       'app/static/scripts/*.js',
       'app/static/scripts/**/*.js',

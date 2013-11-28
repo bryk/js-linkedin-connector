@@ -260,6 +260,10 @@ module.exports = function (grunt) {
         configFile: 'karma.conf.js',
         singleRun: true
       }
+      //e2e: {
+      //  configFile: 'karma-e2e.conf.js',
+      //  singleRun: true
+      //}
     },
     ngmin: {
       dist: {
