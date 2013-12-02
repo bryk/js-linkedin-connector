@@ -258,7 +258,7 @@ module.exports = function (grunt) {
     karma: {
       unit: {
         configFile: 'karma.conf.js',
-        singleRun: true
+        singleRun: false
       }
       //e2e: {
       //  configFile: 'karma-e2e.conf.js',
@@ -326,4 +326,5 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
+  grunt.registerTask('heroku:development', 'server:dist');
 };
