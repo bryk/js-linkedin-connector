@@ -7,7 +7,7 @@
     "passport-linkedin-oauth2": "~1.0.1",
     "connect": "~2.11.0",
     "underscore": "~1.5.2",
-    "bower": "1.2.x",
+    "bower": "1.2.x"
   },
   "devDependencies": {
         "grunt": "~0.4.1",
