@@ -315,5 +315,5 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
-  grunt.registerTask('heroku', ['jshint']);
+  grunt.registerTask('heroku', ['server:dist']);
 };
