@@ -57,6 +57,7 @@ exports.serverConfig = serverConfig;
 exports.getMiddlewares = getMiddlewares;
 
 if (require.main === module){
+  var port = process.env.PORT || 5000;
   var connect = require('connect');
   var app = connect();
   var middlewares = getMiddlewares(connect, [serverConfig.distStatic], serverConfig.dist);
@@ -65,5 +66,7 @@ if (require.main === module){
     app.use(middleware);
   });
 
-  app.listen(3000);
+  app.listen(port, function(){
+    console.log('Server listening on port ' + port);
+  });
 }
