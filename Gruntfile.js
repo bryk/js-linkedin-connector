@@ -1,37 +1,22 @@
 // Generated on 2013-10-31 using generator-angular 0.5.1
 'use strict';
 
-var LIVERELOAD_PORT = 35729;
-var path = require('path');
-var redirectAugumentMiddleware = require('./server/redirectAugmentMiddleware').redirectAugmentMiddleware;
-var loginRedirectMiddleware = require('./server/loginRedirectMiddleware').loginRedirectMiddleware;
-var loginApplicationMiddleware = require('./server/loginApplicationMiddleware').loginApplicationMiddleware;
-var loggedApplicationMiddleware = require('./server/loggedApplicationMiddleware').loggedApplicationMiddleware;
-var passport = require('passport');
+var LIVERELOAD_PORT = 35729;;
+var server = require('./server');
 
-var mountFolder = function (connect, dir) {
-  return connect.static(path.resolve(dir));
-};
+
 
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
   require('time-grunt')(grunt);
   grunt.loadNpmTasks('grunt-jasmine-node');
-
-  var yeomanConfig ={
-      app: require('./bower.json').appPath || 'app',
-      dist: 'dist',
-      server: 'server',
-      serverTest: 'server_test'
-    };
-  yeomanConfig.appStatic = yeomanConfig.app + path.sep + 'static';
-  yeomanConfig.distStatic = yeomanConfig.dist + path.sep + 'static';
+  var serverConfig = server.serverConfig;
 
   grunt.initConfig({
-    yeoman: yeomanConfig,
+    serverConfig: serverConfig,
     watch: {
       styles: {
-        files: ['<%= yeoman.appStatic %>/styles/**/*.css'],
+        files: ['<%= serverConfig.appStatic %>/styles/**/*.css'],
         tasks: ['copy:styles', 'autoprefixer']
       },
       livereload: {
@@ -39,22 +24,24 @@ module.exports = function (grunt) {
           livereload: LIVERELOAD_PORT
         },
         files: [
-          '<%= yeoman.app %>/**/*.html',
+          '<%= serverConfig.app %>/**/*.html',
           '.tmp/styles/**/*.css',
-          '{.tmp,<%= yeoman.appStatic %>}/scripts/**/*.js',
-          '<%= yeoman.appStatic %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
+          '{.tmp,<%= serverConfig.appStatic %>}/scripts/**/*.js',
+          '<%= serverConfig.appStatic %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
     },
     autoprefixer: {
       options: ['last 1 version'],
       dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/styles/',
-          src: '**/*.css',
-          dest: '.tmp/styles/'
-        }]
+        files: [
+          {
+            expand: true,
+            cwd: '.tmp/styles/',
+            src: '**/*.css',
+            dest: '.tmp/styles/'
+          }
+        ]
       }
     },
     connect: {
@@ -66,79 +53,39 @@ module.exports = function (grunt) {
       dev: {
         options: {
           open: true,
-          middleware: function(connect){
-            return [
-              connect.logger(),
-              connect.bodyParser(),
-              connect.cookieParser(),
-              connect.query(),
-              connect.session({secret: 'secret'}),
-              passport.initialize(),
-              passport.session(),
-              redirectAugumentMiddleware,
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, yeomanConfig.appStatic),
-              loginRedirectMiddleware,
-              loginApplicationMiddleware(yeomanConfig.app),
-              loggedApplicationMiddleware(yeomanConfig.app)
-            ];
+          middleware: function (connect) {
+            return server.getMiddlewares(connect, ['tmp', serverConfig.appStatic], serverConfig.app);
           }
         }
       },
       test: {
         options: {
           port: 9001,
-          middleware: function(connect){
-            return [
-              connect.logger(),
-              connect.bodyParser(),
-              connect.cookieParser(),
-              connect.query(),
-              connect.session({secret: 'secret'}),
-              passport.initialize(),
-              passport.session(),
-              redirectAugumentMiddleware,
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, '.test'),
-              mountFolder(connect, yeomanConfig.appStatic),
-              loginRedirectMiddleware,
-              loginApplicationMiddleware(yeomanConfig.app),
-              loggedApplicationMiddleware(yeomanConfig.app)
-            ];
+          middleware: function (connect) {
+            return server.getMiddlewares(connect, ['tmp', 'test', serverConfig.appStatic], serverConfig.app);
           }
         }
       },
       dist: {
         options: {
-          middleware: function(connect){
-            return [
-              connect.logger(),
-              connect.bodyParser(),
-              connect.cookieParser(),
-              connect.query(),
-              connect.session({secret: 'secret'}),
-              passport.initialize(),
-              passport.session(),
-              redirectAugumentMiddleware,
-              mountFolder(connect, yeomanConfig.distStatic),
-              loginRedirectMiddleware,
-              loginApplicationMiddleware(yeomanConfig.dist),
-              loggedApplicationMiddleware(yeomanConfig.dist)
-            ];
+          middleware: function (connect) {
+            return server.getMiddlewares(connect, [serverConfig.distStatic], serverConfig.dist);
           }
         }
       }
     },
     clean: {
       dist: {
-        files: [{
-          dot: true,
-          src: [
-            '.tmp',
-            '<%= yeoman.dist %>/*',
-            '!<%= yeoman.dist %>/.git*'
-          ]
-        }]
+        files: [
+          {
+            dot: true,
+            src: [
+              '.tmp',
+              '<%= serverConfig.dist %>/*',
+              '!<%= serverConfig.dist %>/.git*'
+            ]
+          }
+        ]
       },
       server: '.tmp'
     },
@@ -148,53 +95,56 @@ module.exports = function (grunt) {
       },
       all: [
         'Gruntfile.js',
-        '<%= yeoman.appStatic %>/scripts/**/*.js',
-        '<%= yeoman.server %>/**/*.js',
-        '<%= yeoman.serverTest %>/**/*.js'
+        'server.js',
+        '<%= serverConfig.appStatic %>/scripts/**/*.js',
+        '<%= serverConfig.server %>/**/*.js',
+        '<%= serverConfig.serverTest %>/**/*.js'
       ]
     },
     rev: {
       dist: {
         files: {
           src: [
-            '<%= yeoman.distStatic %>/login/**/*.{js,css}',
-            '<%= yeoman.distStatic %>/app/**/*.{js,css}',
-            '<%= yeoman.distStatic %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}',
-            '<%= yeoman.distStatic %>/styles/fonts/*'
+            '<%= serverConfig.distStatic %>/login/**/*.{js,css}',
+            '<%= serverConfig.distStatic %>/app/**/*.{js,css}',
+            '<%= serverConfig.distStatic %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}',
+            '<%= serverConfig.distStatic %>/styles/fonts/*'
           ]
         }
       }
     },
     useminPrepare: {
-      html: ['<%= yeoman.app %>/app.html', '<%= yeoman.app %>/login.html'],
+      html: ['<%= serverConfig.app %>/app.html', '<%= serverConfig.app %>/login.html'],
       options: {
-        dest: '<%= yeoman.distStatic %>'
+        dest: '<%= serverConfig.distStatic %>'
       }
     },
     usemin: {
-      html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.distStatic %>/styles/**/*.css'],
+      html: ['<%= serverConfig.dist %>/{,*/}*.html'],
+      css: ['<%= serverConfig.distStatic %>/styles/**/*.css'],
       options: {
-        assetsDirs: ['<%= yeoman.distStatic %>']
+        assetsDirs: ['<%= serverConfig.distStatic %>']
       }
     },
     htmlmin: {
       dist: {
         options: {
           /* removeCommentsFromCDATA: true,
-          collapseBooleanAttributes: true,
-          removeAttributeQuotes: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeOptionalTags: true */
+           collapseBooleanAttributes: true,
+           removeAttributeQuotes: true,
+           removeRedundantAttributes: true,
+           useShortDoctype: true,
+           removeEmptyAttributes: true,
+           removeOptionalTags: true */
         },
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>',
-          src: ['*.html', 'static/app/**/*.html', 'static/login/**/*.html'],
-          dest: '<%= yeoman.dist %>'
-        }]
+        files: [
+          {
+            expand: true,
+            cwd: '<%= serverConfig.app %>',
+            src: ['*.html', 'static/app/**/*.html', 'static/login/**/*.html'],
+            dest: '<%= serverConfig.dist %>'
+          }
+        ]
       }
     },
     // Put files not handled in other tasks here
@@ -205,29 +155,32 @@ module.exports = function (grunt) {
     },
     copy: {
       dist: {
-        files: [{
-          expand: true,
-          dot: true,
-          cwd: '<%= yeoman.app %>',
-          dest: '<%= yeoman.dist %>',
-          src: [
-            '*.{ico,png,txt}',
-            'static/bower_components/**/*',
-            'static/images/**/*.{gif,webp}',
-            'static/styles/fonts/*'
-          ]
-        }, {
-          expand: true,
-          cwd: '.tmp/images',
-          dest: '<%= yeoman.distStatic %>/images',
-          src: [
-            'generated/*'
-          ]
-        }]
+        files: [
+          {
+            expand: true,
+            dot: true,
+            cwd: '<%= serverConfig.app %>',
+            dest: '<%= serverConfig.dist %>',
+            src: [
+              '*.{ico,png,txt}',
+              'static/bower_components/**/*',
+              'static/images/**/*.{gif,webp}',
+              'static/styles/fonts/*'
+            ]
+          },
+          {
+            expand: true,
+            cwd: '.tmp/images',
+            dest: '<%= serverConfig.distStatic %>/images',
+            src: [
+              'generated/*'
+            ]
+          }
+        ]
       },
       styles: {
         expand: true,
-        cwd: '<%= yeoman.appStatic %>/styles',
+        cwd: '<%= serverConfig.appStatic %>/styles',
         dest: '.tmp/styles/',
         src: '**/*.css'
       }
@@ -256,16 +209,18 @@ module.exports = function (grunt) {
     },
     ngmin: {
       dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.dist %>/',
-          src: ['static/app/**/*.js', 'static/login/**/*.js'],
-          dest: '<%= yeoman.dist %>/'
-        }]
+        files: [
+          {
+            expand: true,
+            cwd: '<%= serverConfig.dist %>/',
+            src: ['static/app/**/*.js', 'static/login/**/*.js'],
+            dest: '<%= serverConfig.dist %>/'
+          }
+        ]
       }
     },
     /* jshint camelcase: false */
-    jasmine_node:{
+    jasmine_node: {
       specNameMatcher: 'Spec',
       projectRoot: './server_test',
 
@@ -315,5 +270,5 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
-  grunt.registerTask('heroku', ['server:dist']);
+  grunt.registerTask('heroku', ['build']);
 };
