@@ -7,10 +7,10 @@
     "passport-linkedin-oauth2": "~1.0.1",
     "connect": "~2.11.0",
     "underscore": "~1.5.2",
-    "bower": "1.2.x"
+    "bower": "1.2.x",
+    "grunt": "~0.4.1",
   },
   "devDependencies": {
-        "grunt": "~0.4.1",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-coffee": "~0.7.0",
